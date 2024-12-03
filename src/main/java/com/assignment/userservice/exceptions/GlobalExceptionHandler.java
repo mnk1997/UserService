@@ -54,4 +54,9 @@ public class GlobalExceptionHandler {
 
 
     }
+    @ExceptionHandler(RoleAlreadyExist.class)
+    public ResponseEntity<String> handleRoleAlreadyExist(RoleAlreadyExist e) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(e.getMessage());
+    }
 }
