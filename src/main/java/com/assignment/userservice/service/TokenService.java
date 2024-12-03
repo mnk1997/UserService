@@ -18,6 +18,9 @@ public class TokenService implements ITokenService {
 
     private SessionRepository sessionRepository;
 
+    public TokenService(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
+    }
     @Override
     public Session findNonExpiredTokenForGivenUserName(User user) throws NoValidTokenFoundException {
         Optional<Session> token=sessionRepository.findByExpiryAtAfterAndUser(Instant.now().getEpochSecond(),user);

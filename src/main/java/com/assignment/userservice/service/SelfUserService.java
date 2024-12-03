@@ -20,10 +20,11 @@ public class SelfUserService implements  IUserService{
     private PasswordEncoder passwordEncoder;
 
     private TokenService tokenService;
-    public SelfUserService(PasswordEncoder passwordEncoder, UserRepository userRepo, RoleService roleService) {
+    public SelfUserService(PasswordEncoder passwordEncoder, UserRepository userRepo, RoleService roleService,TokenService tokenService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.roleService = roleService;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -53,12 +54,15 @@ public class SelfUserService implements  IUserService{
               //fetch if already token is valid or not
               try{
                 token  =tokenService.findNonExpiredTokenForGivenUserName(user.get());
+                return token;
               }catch(NoValidTokenFoundException e){
                   //we have to create new token..
               }
               token=new Session();
               token.setUser(user.get());
               token.setExpiryAt(Instant.now().getEpochSecond()+15*60);
+              //generat some randaom string token
+                 token.setToken(username+Instant.now().getEpochSecond());
             token=  tokenService.saveSession(token);
             return token;
 

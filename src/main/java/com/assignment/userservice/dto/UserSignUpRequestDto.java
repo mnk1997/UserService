@@ -25,13 +25,14 @@ public class UserSignUpRequestDto {
         user.setFirstName(signInDto.getFirstName());
         user.setPhoneNumber(signInDto.getPhoneNumber());
         List<Role> roles = new ArrayList<>();
-        for(String role : signInDto.getRoles())
-        {
-            Role r=new Role();
-            r.setValue(role);
-            roles.add(r);
+        if(signInDto.getRoles() != null) {
+            for (String role : signInDto.getRoles()) {
+                Role r = new Role();
+                r.setValue(role);
+                roles.add(r);
+            }
+            user.setRoles(roles);
         }
-        user.setRoles(roles);
         return user;
     }
 }
