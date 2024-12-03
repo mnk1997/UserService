@@ -1,5 +1,7 @@
 package com.assignment.userservice.dto;
 
+import com.assignment.userservice.models.Session;
+import com.assignment.userservice.models.User;
 import lombok.Data;
 
 import java.util.List;
@@ -8,5 +10,14 @@ import java.util.List;
 public class UserSignInResponseDto {
 
     private String token;
-    private List<String> roles;
+   private String username;
+    public static UserSignInResponseDto fromSession(Session user) {
+        UserSignInResponseDto dto = new UserSignInResponseDto();
+        dto.setToken(user.getToken());
+        dto.setUsername(user.getUser().getUserName());
+        return dto;
+    }
+
+
+
 }
