@@ -14,26 +14,28 @@ import java.util.Optional;
 
 @Service
 public class SelfUserService implements  IUserService{
+    private final RoleService roleService;
     private UserRepository userRepo;
 
     private PasswordEncoder passwordEncoder;
 
     private TokenService tokenService;
-    public SelfUserService(PasswordEncoder passwordEncoder,UserRepository userRepo) {
+    public SelfUserService(PasswordEncoder passwordEncoder, UserRepository userRepo, RoleService roleService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
+        this.roleService = roleService;
     }
 
     @Override
     public User signUp(User user) throws IncorrectPhoneNumber, RoleNotFoundException, NoRoleSelected {
-        UserValidation userValidation = new UserValidation();
+
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         //validate user entry
             //like user phone number should be equal to 10 digit
-        userValidation.isPhoneNumberValid(user.getPhoneNumber());
+        UserValidation.isPhoneNumberValid(user.getPhoneNumber());
             //all the roles are present or not
-          userValidation.isRolesValid(user.getRoles());
+          roleService.isRolesValid(user.getRoles());
 
           //set uniqiue userName for the user
         StringBuilder username=new StringBuilder(user.getFirstName());
