@@ -7,8 +7,11 @@ import com.assignment.userservice.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController("/user")
 public class UserController {
 
     private IUserService  userService;
@@ -16,20 +19,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    public ResponseEntity<UserSignUpResponseDto> signUp(UserSignUpRequestDto userSignUpRequestDto) throws IncorrectPhoneNumber {
+    @PostMapping
+    public ResponseEntity<UserSignUpResponseDto> signUp(@RequestBody UserSignUpRequestDto userSignUpRequestDto) throws IncorrectPhoneNumber {
         User user=userService.signUp(UserSignUpRequestDto.toUser(userSignUpRequestDto));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UserSignUpResponseDto.fromUser(user));
 
     }
 
-    public ResponseEntity<UserSignInResponseDto> signIn(UserSignInRequestDto user) throws UserNotFoundException, PasswordAndUserNameNotMatchedException {
+    @PostMapping("/login")
+    public ResponseEntity<UserSignInResponseDto> signIn(@RequestBody UserSignInRequestDto user) throws UserNotFoundException, PasswordAndUserNameNotMatchedException {
         Session token=userService.login(user.getUserName(),user.getPassword());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(UserSignInResponseDto.fromSession(token));
     }
 
-    public ResponseEntity<TokenValidateResponseDto> validateToken(TokenValidateRequestDto token) throws UserNotFoundException, NoValidTokenFoundException, SessionExpiredException {
+    @PostMapping("/validateToken")
+    public ResponseEntity<TokenValidateResponseDto> validateToken(@RequestBody TokenValidateRequestDto token) throws UserNotFoundException, NoValidTokenFoundException, SessionExpiredException {
         Session session =userService.validateToken(token.getToken(),token.getUserName());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(TokenValidateResponseDto.fromToken(session));
