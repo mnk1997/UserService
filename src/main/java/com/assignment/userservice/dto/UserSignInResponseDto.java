@@ -14,7 +14,7 @@ public class UserSignInResponseDto {
     public static UserSignInResponseDto fromSession(Session user) {
         UserSignInResponseDto dto = new UserSignInResponseDto();
         dto.setToken(user.getToken());
-        dto.setUsername(user.getUser().getUserName());
+        dto.setUsername(user.getUser().getUsername());
         return dto;
     }
 

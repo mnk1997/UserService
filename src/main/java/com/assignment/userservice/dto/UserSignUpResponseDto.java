@@ -14,7 +14,7 @@ public class UserSignUpResponseDto {
     public static UserSignUpResponseDto fromUser(User user)
     {
         UserSignUpResponseDto dto = new UserSignUpResponseDto();
-        dto.setUserName(user.getUserName());
+        dto.setUserName(user.getUsername());
         dto.setCreatedAt(user.getCreatedAt());
         return dto;
     }
