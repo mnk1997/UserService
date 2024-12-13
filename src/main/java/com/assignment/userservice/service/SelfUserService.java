@@ -1,10 +1,12 @@
 package com.assignment.userservice.service;
 
+import com.assignment.userservice.configurations.JwtConfig;
 import com.assignment.userservice.exceptions.*;
 import com.assignment.userservice.models.Session;
 import com.assignment.userservice.models.User;
 import com.assignment.userservice.repository.UserRepository;
 import com.assignment.userservice.utils.UserValidation;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +18,18 @@ import java.util.Optional;
 public class SelfUserService implements  IUserService{
     private final RoleService roleService;
     private UserRepository userRepo;
-
+    private JwtConfig jwt;
     private PasswordEncoder passwordEncoder;
 
     private TokenService tokenService;
-    public SelfUserService(PasswordEncoder passwordEncoder, UserRepository userRepo, RoleService roleService,TokenService tokenService) {
+    public SelfUserService(PasswordEncoder passwordEncoder,
+                           UserRepository userRepo, RoleService roleService, TokenService tokenService,
+                           JwtConfig jwtConfig) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.roleService = roleService;
         this.tokenService = tokenService;
+        this.jwt = jwtConfig;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class SelfUserService implements  IUserService{
               token.setUser(user.get());
               token.setExpiryAt(Instant.now().getEpochSecond()+15*60);
               //generat some randaom string token
-                 token.setToken(username+Instant.now().getEpochSecond());
+                 token.setToken(jwt.generateJwtToken( user.get()));
             token=  tokenService.saveSession(token);
             return token;
 

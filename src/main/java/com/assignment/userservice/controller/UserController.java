@@ -31,6 +31,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<UserSignInResponseDto> signIn(@RequestBody UserSignInRequestDto user) throws UserNotFoundException, PasswordAndUserNameNotMatchedException {
+        System.out.println("Caleed the signIn method");
         Session token=userService.login(user.getUserName(),user.getPassword());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(UserSignInResponseDto.fromSession(token));
